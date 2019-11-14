@@ -24,7 +24,7 @@ type JWT struct{
 }
 var db *sql.DB
 func main() {
-	pgUrl, err := pq.ParseURL("postgres://gykxtcgv:SfJ_HK...@salt.db.elephantsql.com:5432/gykxtcgv ")
+	pgUrl, err := pq.ParseURL("postgres://gykxtcgv:SfJ_HK3OcQRaGpmoQjr1FAm2yaBqiPLi@salt.db.elephantsql.com:5432/gykxtcgv")
 	if(err!=nil){
 		log.Fatal()
 	}
@@ -42,7 +42,8 @@ func respondwitherror(w http.ResponseWriter, r* http.Request,error Error){
 	w.WriteHeader(http.StatusBadRequest)
 	json.NewEncoder(w).Encode(error)
 }
-func responceJSON(w http.ResponseWriter,r* http.Request,data interface{}){
+func responceJSON(w http.ResponseWriter,data interface{}){
+	json.NewEncoder(w).Encode(data)
 
 }
 func signupPost(w http.ResponseWriter,r *http.Request){
@@ -60,7 +61,19 @@ func signupPost(w http.ResponseWriter,r *http.Request){
 		respondwitherror(w, r, error)
 		return
 	}
-}
-func indexhandler(w http.ResponseWriter, r* http.Response){
-	w.Write([]byte("this is index page"))
+	hash,err:=bcrypt.GenerateFromPassword([]byte((user.Password)),10)
+	if(err!=nil){
+		log.Fatal()
+	}
+	user.Password=string(hash)
+	query:="insert into users (email,password) values($1,$2) RETURNING id;"
+	err=db.QueryRow(query,user.Email,user.Password).Scan(&user.ID)
+	if(err!=nil){
+		fmt.Println(error.message)
+		error.message="Server error"
+		respondwitherror(w,r,error)
+	}
+	user.Password=""
+	w.Header().Set("Content-Type","application/json")
+	responceJSON(w,user)
 }
