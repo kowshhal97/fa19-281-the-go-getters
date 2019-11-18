@@ -1,6 +1,8 @@
 # Menu API document
 
-### 1. Create an entry in the menu for the new Item (Accessible only to admin)
+NOTE: Addition and Deletion and Editing of item/s can only be performed by admin user. Any user can view the items.
+
+### 1. Create an entry in the menu for the new Item 
 
 **Request**
 
@@ -157,7 +159,7 @@ Parameters for Error
 | errorMessage       | String | Error specific message to user     |
 | statusCode         | int    | Code representing error response   |
 
-### 5. Delete a particular Item from menu (Accessible only to admin)
+### 5. Delete a particular Item from menu 
 
 **Request**
 
