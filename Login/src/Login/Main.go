@@ -24,6 +24,9 @@ type Error  struct {
 type JWT struct {
 	Token string `json:"token"`
 }
+type Test struct{
+	Message string `json:"message"`
+}
 var db *sql.DB
 func main() {
 	pgUrl, err := pq.ParseURL("postgres://gykxtcgv:SfJ_HK3OcQRaGpmoQjr1FAm2yaBqiPLi@salt.db.elephantsql.com:5432/gykxtcgv")
@@ -42,7 +45,8 @@ func main() {
 	router.HandleFunc("/signup", signupPost).Methods("POST")
 	router.HandleFunc("/login", login).Methods("POST")
 	router.HandleFunc("/protected",TokenVerifyMiddleware(protectedEndPoint)).Methods("GET")
-	http.ListenAndServe(":8080", router)
+	router.HandleFunc("/ping",pingHandler).Methods("GET")
+	http.ListenAndServe(":3000", router)
 }
 func respondwitherror(w http.ResponseWriter,status int, error Error) {
 	w.WriteHeader(status)
@@ -64,6 +68,9 @@ func GenerateToken(user User)(string,error) {
 	})
 	tokenString, err := token.SignedString([]byte(secret))
 	return tokenString, err
+}
+func pingHandler(w http.ResponseWriter, r* http.Request){
+	responceJSON(w,"API version 1.0 is Alive!")
 }
 func login(w http.ResponseWriter, r* http.Request) {
 	var user User
