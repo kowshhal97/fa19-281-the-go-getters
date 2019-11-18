@@ -1,11 +1,17 @@
 package main
-
+import "gopkg.in/mgo.v2/bson"
 type Review struct {
-	ReviewId   string  //`json:"reviewId",omitempty"`
-	UserId     string  `json:"userId",omitempty" bson:"userId"`
-	MenuItemId string  `json:"menuItem",omitempty" bson:"menuItem"`
-	ReviewDate string  //`json:"paymentDate,omitempty"`
-	Comment    string  `json:"comment,omitempty" bson:"comment"`
-}
-//var orders map[string] order
+	Id      	bson.ObjectId `json:"id" bson:"_id,omitempty"`
+	ItemName	string
 
+
+	Reviews []struct {
+		ReviewerName 		string
+		Comment				string
+		Rating 				int
+
+	}
+
+	ReviewDate string
+
+}

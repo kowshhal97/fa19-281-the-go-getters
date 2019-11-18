@@ -6,30 +6,34 @@ import (
 	"net/http"
 	//"os"
 	"time"
+	"log"
+
+	
 
 	"github.com/codegangsta/negroni"
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
-	uuid "github.com/satori/go.uuid"
+	//uuid "github.com/satori/go.uuid"
 	"github.com/unrolled/render"
 	mongo "gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
-)
 
+)
+/*
 var mongodb_server = os.Getenv("AWS_MONGODB")
 var mongodb_database = os.Getenv("MONGODB_DBNAME")
 var mongodb_collection = os.Getenv("MONGODB_COLLECTION")
 var mongodb_username = os.Getenv("MONGODB_USERNAME")
 var mongodb_password = os.Getenv("MONGODB_PASSWORD")
-
+*/
 //hardcode for testing
-/*
+
 var mongodb_server = "mongodb://127.0.0.1:27017"
 var mongodb_database = "cmpe281"
-var mongodb_collection = "pizza"
+var mongodb_collection = "NewPizza"
 var mongodb_username = "admin"
 var mongodb_password = "admin"
-*/
+
 // NewServer configures and returns a Server.
 func NewServer() *negroni.Negroni {
 	formatter := render.New(render.Options{
@@ -49,10 +53,11 @@ func NewServer() *negroni.Negroni {
 // API Routes
 func initRoutes(mx *mux.Router, formatter *render.Render) {
 	mx.HandleFunc("/reviews/ping", pingHandler(formatter)).Methods("GET")
-	mx.HandleFunc("/reviews/{menuItem}", getAllReviewsforItem(formatter)).Methods("GET")
-	mx.HandleFunc("/reviews",  addNewReview(formatter)).Methods("POST")
-	//mx.HandleFunc("/payment/{id}", getPaymentDetailsOfOne(formatter)).Methods("GET")
-	//mx.HandleFunc("/payment/{id}", deletePaymentDetailsOfOne(formatter)).Methods("DELETE")
+	mx.HandleFunc("/postReview", postReviewHandler(formatter)).Methods("POST")
+	mx.HandleFunc("/getReviews/{itemName}", getReviewsHandler(formatter)).Methods("GET")
+	mx.HandleFunc("/deleteReview", deleteReviewHandler(formatter)).Methods("DELETE")
+	mx.HandleFunc("/updateReview", updateReviewHandler(formatter)).Methods("PUT")
+
 }
 
 // API Ping Handler
@@ -62,106 +67,139 @@ func pingHandler(formatter *render.Render) http.HandlerFunc {
 	}
 }
 
-// API Payments Handler
-func addNewReview(formatter *render.Render) http.HandlerFunc {
-	return func(writer http.ResponseWriter, req *http.Request) {
-		session, _ := mongo.Dial(mongodb_server)
-		err := session.DB("admin").Login(mongodb_username, mongodb_password)
-		if err != nil {
-			formatter.JSON(writer, http.StatusInternalServerError, "Mongo Connection Error ")
-			return
-		}
-		defer session.Close()
-		session.SetMode(mongo.Monotonic, true)
-		collection := session.DB(mongodb_database).C(mongodb_collection)
-		fmt.Println(req.Body)
+// API Post a Review Handler.
+func postReviewHandler(formatter *render.Render) http.HandlerFunc {
 
+	return func(w http.ResponseWriter, req *http.Request) {
 		var review Review
 		_ = json.NewDecoder(req.Body).Decode(&review)
-		fmt.Printf("", review)
-
-		uuid,_ := uuid.NewV4()
-		review.ReviewId = uuid.String()
-		t := time.Now()
-		review.ReviewDate = t.Format("2006-01-02 15:04:05")
-		
-		err = collection.Insert(review)
-		if err != nil {
-			formatter.JSON(writer, http.StatusNotFound, "Create Review Error")
-			return
-		}
-		fmt.Println("Create new review:", review)
-		formatter.JSON(writer, http.StatusOK, review)
-	}
-}
-
-//API to get all Payment
-func getAllReviewsforItem(formatter *render.Render) http.HandlerFunc {
-	return func(w http.ResponseWriter, req *http.Request) {
+		fmt.Println("Review is: ",review.ItemName,  " ", review.Reviews)
 		session, _ := mongo.Dial(mongodb_server)
 		err := session.DB("admin").Login(mongodb_username, mongodb_password)
 		if err != nil {
-			formatter.JSON(w, http.StatusInternalServerError, "Mongo Connection Error")
+			formatter.JSON(w, http.StatusInternalServerError, "Mongo Connection Error ")
 			return
 		}
 		defer session.Close()
 		session.SetMode(mongo.Monotonic, true)
 		c := session.DB(mongodb_database).C(mongodb_collection)
-		parameter := mux.Vars(req)
-		fmt.Println("parameters",parameter)
-		var menu_item string = parameter["menuItem"]
-		fmt.Println("Input userId is: ", menu_item)
-		var result []bson.M
-		//fmt.Println(c.Find(bson.M{/*"MenuItemId": "pizza"*/}).One(&result))
-		 err = c.Find(bson.M{"menuItem": "menu_item"}).One(&result)
-		if err != nil {
-			fmt.Println("error:" + err.Error())
-			formatter.JSON(w, http.StatusNotFound, "Get All Review for menu a item Error")
-			return
+		fmt.Println(req.Body)
+		t := time.Now()
+		entry := Review{
+			ItemName: review.ItemName,
+			Reviews: review.Reviews,
+			ReviewDate : t.Format("2006-01-02 15:04:05"),
 		}
-		fmt.Println("getAllPaymentDetails:", result)
-		formatter.JSON(w, http.StatusOK, result)
+		err = c.Insert(entry)
+		if err != nil {
+			fmt.Println("Error while adding reviews: ", err)
+			formatter.JSON(w, http.StatusInternalServerError, struct{ Response error }{err})
+		} else {
+			formatter.JSON(w, http.StatusOK, struct{ Response string }{"Review added"})
+		}
 	}
 }
 
+//Get All Reviews for a Menu Item
+func getReviewsHandler(formatter *render.Render) http.HandlerFunc {
 
+	return func(w http.ResponseWriter, req *http.Request) {
+	
+		session, _ := mongo.Dial(mongodb_server)
+		err := session.DB("admin").Login(mongodb_username, mongodb_password)
+		if err != nil {
+			formatter.JSON(w, http.StatusInternalServerError, "Mongo Connection Error ")
+			return
+		}
+		defer session.Close()
+		session.SetMode(mongo.Monotonic, true)
 
-/*
+		params := mux.Vars(req)
+		//var ItemName string = params["menuitemname"]
+		//fmt.Println( "Item Name: ", ItemName )
+		var ItemName string = params["itemName"]
+		fmt.Println( "Item Name: ", ItemName )
 
-  	-- Gumball MongoDB Collection (Create Document) --
+		c := session.DB(mongodb_database).C(mongodb_collection)
+		var results []Review
+		err = c.Find(bson.M{"itemname": ItemName}).All(&results)
+		if err != nil {
+			log.Fatal(err)
+		}
+		fmt.Println(results)
+		if len(results) > 0 {
+			formatter.JSON(w, http.StatusOK, results)
+		}else{
+			formatter.JSON(w, http.StatusNoContent, struct{ Response string }{"No reviews found for the given ID"})
+		}
+	}
+}
 
-    db.gumball.insert(
-	    { 
-	      Id: 1,
-	      CountGumballs: NumberInt(202),
-	      ModelNumber: 'M102988',
-	      SerialNumber: '1234998871109' 
-	    }
-	) ;
+//Delete Last Review
+func deleteReviewHandler(formatter *render.Render) http.HandlerFunc {
 
-    -- Gumball MongoDB Collection - Find Gumball Document --
+	return func(w http.ResponseWriter, req *http.Request) {
+		var m Review
+		_ = json.NewDecoder(req.Body).Decode(&m)
+		fmt.Println("Review is: ", m.Reviews)
+		session, err := mongo.Dial(mongodb_server)
+		if err != nil {
+			panic(err)
+		}
 
-    db.gumball.find( { Id: 1 } ) ;
+		if err != nil {
+			fmt.Println("Reviews API (Delete) - Unable to connect to MongoDB during read operation")
+			panic(err)
+		}
+		defer session.Close()
+		session.SetMode(mongo.Monotonic, true)
+		c := session.DB(mongodb_database).C(mongodb_collection)
 
-    {
-        "_id" : ObjectId("54741c01fa0bd1f1cdf71312"),
-        "Id" : 1,
-        "CountGumballs" : 202,
-        "ModelNumber" : "M102988",
-        "SerialNumber" : "1234998871109"
-    }
+		query := bson.M{
+			"itemname": m.ItemName,
+		}
+		change := bson.M{"$pull": bson.M{ "reviews" :  bson.M{"$in": m.Reviews } }}
+		err = c.Update(query, change)
 
-    -- Gumball MongoDB Collection - Update Gumball Document --
+		if err != nil {
+			fmt.Println("Error while deleting reviews: ", err)
+			formatter.JSON(w, http.StatusInternalServerError, struct{ Response error }{err})
+		} else {
+			formatter.JSON(w, http.StatusOK, struct{ Response string }{"Review deleted"})
+		}
+	}
+}
 
-    db.gumball.update( 
-        { Dd: 1 }, 
-        { $set : { CountGumballs : NumberInt(10) } },
-        { multi : false } 
-    )
+func updateReviewHandler(formatter *render.Render) http.HandlerFunc {
 
-    -- Gumball Delete Documents
+	return func(w http.ResponseWriter, req *http.Request) {
+		var m Review
+		_ = json.NewDecoder(req.Body).Decode(&m)
+		fmt.Println("Review is: ", m.ItemName, " " , "Reviews", m.Reviews)
+		session, err := mongo.Dial(mongodb_server)
+		if err != nil {
+			panic(err)
+		}
 
-    db.gumball.remove({})
+		if err != nil {
+			fmt.Println("Reviews API (Update) - Unable to connect to MongoDB during read operation")
+			panic(err)
+		}
+		defer session.Close()
+		session.SetMode(mongo.Monotonic, true)
+		c := session.DB(mongodb_database).C(mongodb_collection)
 
- */
+		query := bson.M{
+			"itemname": m.ItemName,
+		}
+		change := bson.M{"$push": bson.M{ "reviews" : bson.M{"$each": m.Reviews }}}
+		err = c.Update(query, change)
 
+		if err != nil {
+			fmt.Println("Error while updating reviews: ", err)
+			formatter.JSON(w, http.StatusInternalServerError, struct{ Response error }{err})
+		} else {
+			formatter.JSON(w, http.StatusOK, struct{ Response string }{"Review updated"})
+		}
+	}
+}
