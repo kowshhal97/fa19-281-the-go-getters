@@ -45,6 +45,7 @@ func initRoutes(mx *mux.Router, formatter *render.Render) {
 	mx.HandleFunc("/order/ping", pingHandler(formatter)).Methods("GET")
 	mx.HandleFunc("/order/{orderId}", getPizzaByOrderIdHandler(formatter)).Methods("GET")
 	mx.HandleFunc("/order", orderPizzaHandler(formatter)).Methods("POST")
+	mx.HandleFunc("/order/{orderId}", orderConfirmationHandler(formatter)).Methods("PUT")
 }
 
 
@@ -59,12 +60,11 @@ func pingHandler(formatter *render.Render) http.HandlerFunc {
 func getPizzaByOrderIdHandler(formatter *render.Render) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
 
-		//Setup
-		session, err := mgo.Dial(server_mongo)
-		if err != nil {
-                formatter.JSON(w, http.StatusInternalServerError, "Error")
-                return
-         }
+		session, error := mgo.Dial(server_mongo)
+		if error = session.DB(database).Login(user, password); error != nil {
+		formatter.JSON(w, http.StatusInternalServerError, "Error")
+		return	
+		}
 		defer session.Close()
 		session.SetMode(mgo.Monotonic, true)
 
@@ -135,4 +135,34 @@ func orderPizzaHandler(formatter *render.Render) http.HandlerFunc {
 		formatter.JSON(w, http.StatusOK, order)
 	}
 }
+
+//PUT call to change order status to placed
+func orderConfirmationHandler(formatter *render.Render) http.HandlerFunc {
+	return func(w http.ResponseWriter, req *http.Request) {
+
+		parameter := mux.Vars(req)
+
+		session, error := mgo.Dial(server_mongo)
+		if error = session.DB(database).Login(user, password); 
+		error != nil {
+			formatter.JSON(w, http.StatusInternalServerError, "Error")
+			return
+		}
+		defer session.Close()
+		session.SetMode(mgo.Monotonic, true)
+		c := session.DB(database).C(collection)
+		var pizza_order PizzaOrder
+		var order_id string = parameter["orderId"]
+		fmt.Println(order_id)
+		record_error := c.Find(bson.M{"orderId": order_id}).One(&pizza_order)
+		if record_error != nil {
+			formatter.JSON(w, http.StatusNotFound, "Order could not be placed successfully")
+		}
+		pizza_order.OrderStatus = "Successfull"
+		c.Update(bson.M{"orderId": pizza_order.OrderId}, bson.M{"$set": bson.M{"orderStatus": pizza_order.OrderStatus}})
+		formatter.JSON(w, http.StatusOK, pizza_order)
+
+	}
+}
+
 
