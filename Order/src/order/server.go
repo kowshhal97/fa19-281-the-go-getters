@@ -46,6 +46,7 @@ func initRoutes(mx *mux.Router, formatter *render.Render) {
 	mx.HandleFunc("/order/{orderId}", getPizzaByOrderIdHandler(formatter)).Methods("GET")
 	mx.HandleFunc("/order", orderPizzaHandler(formatter)).Methods("POST")
 	mx.HandleFunc("/order/{orderId}", orderConfirmationHandler(formatter)).Methods("PUT")
+	mx.HandleFunc("/order/{orderId}", deletePizzaHandler(formatter)).Methods("DELETE")
 }
 
 
@@ -60,6 +61,7 @@ func pingHandler(formatter *render.Render) http.HandlerFunc {
 func getPizzaByOrderIdHandler(formatter *render.Render) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
 
+		//Setup
 		session, error := mgo.Dial(server_mongo)
 		if error = session.DB(database).Login(user, password); error != nil {
 		formatter.JSON(w, http.StatusInternalServerError, "Error")
@@ -136,12 +138,14 @@ func orderPizzaHandler(formatter *render.Render) http.HandlerFunc {
 	}
 }
 
+
 //PUT call to change order status to placed
 func orderConfirmationHandler(formatter *render.Render) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
 
 		parameter := mux.Vars(req)
 
+		//Setup
 		session, error := mgo.Dial(server_mongo)
 		if error = session.DB(database).Login(user, password); 
 		error != nil {
@@ -161,6 +165,29 @@ func orderConfirmationHandler(formatter *render.Render) http.HandlerFunc {
 		pizza_order.OrderStatus = "Successfull"
 		c.Update(bson.M{"orderId": pizza_order.OrderId}, bson.M{"$set": bson.M{"orderStatus": pizza_order.OrderStatus}})
 		formatter.JSON(w, http.StatusOK, pizza_order)
+
+	}
+}
+
+//DELETE API call
+func deletePizzaHandler(formatter *render.Render) http.HandlerFunc {
+	return func(w http.ResponseWriter, req *http.Request) {
+		session, error := mgo.Dial(server_mongo)
+		if error = session.DB(database).Login(user, password); error != nil {
+			formatter.JSON(w, http.StatusInternalServerError, "Error in Database Connection")
+			return
+		}
+		defer session.Close()
+		session.SetMode(mgo.Monotonic, true)
+		c := session.DB(database).C(collection)
+		parameter := mux.Vars(req)
+		var orderid string = parameter["orderId"]
+		record_error := c.Remove(bson.M{"orderId": orderid})
+		if record_error != nil {
+			formatter.JSON(w, http.StatusNotFound, "Sorry, no such order")
+			return
+		}
+		formatter.JSON(w, http.StatusOK, "Order has been deleted: "+orderid)
 
 	}
 }
