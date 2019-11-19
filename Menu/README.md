@@ -20,7 +20,6 @@ POST /menu/Item
 | ItemSummary        | String | Brief summary about Item          |
 | ItemDescription    | String | Detail Description of Item        |
 | ItemAmount         | Float  | Amount of the Item                |
-| ItemCalorieContent | struct | Calorie contents of Item          |
 | ItemAvailable      | Boolean| Displays if Item is available     |
 
 *MongoDB generates unique id on each new entry which is assigned to ItemID*
@@ -37,7 +36,6 @@ Parameters for Success
 | ItemSummary        | String | Brief summary about Item           |
 | ItemDescription    | String | Detail Description of Item         |
 | ItemAmount         | Float  | Amount of the Item                 |
-| ItemCalorieContent | struct | Calorie contents of Item           |
 | ItemAvailable      | Boolean| Displays if Item is available      |
 | ItemImagePath      | String | Represents the URL of Item's image |
 | statusCode         | int    | Code representing success response |
@@ -69,7 +67,6 @@ Parameters for Successful Response
 | ItemSummary        | String | Brief summary about Item           |
 | ItemDescription    | String | Detail Description of Item         |
 | ItemAmount         | Float  | Amount of the Item                 |
-| ItemCalorieContent | struct | Calorie contents of Item           |
 | ItemAvailable      | Boolean| Displays if Item is available      |
 | statusCode         | String | Code representing success response |
 
