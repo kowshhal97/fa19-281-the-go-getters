@@ -1,21 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
+
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  selector: 'app-order',
+  templateUrl: './order.component.html',
+  styleUrls: ['./order.component.css']
 })
-export class LoginComponent implements OnInit {
-
-  username:any;
-  password:any;
-
+export class OrderComponent implements OnInit {
   requestObject ={
-    "username" : this.username,
-    "password": this.password
-
+    //user id from users
   }
   constructor(private http : HttpClient, private router: Router) {
     
@@ -29,21 +23,14 @@ export class LoginComponent implements OnInit {
     header.append('Content-Type', 'application/json');
     
      this.http
-        .post("http://34.214.86.104/login",
-        {"username":this.username,"password":this.password},
+        .post("endpoint not available",
+        this.requestObject,
             {headers: header})
         .subscribe((res) => {
             //do something with the response here
 
             this.router.navigate(['./home']);
-
-
             console.log(res);
-        });
-
-
-        
-    
-    
+        }); 
   }
 }
