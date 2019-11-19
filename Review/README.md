@@ -20,24 +20,115 @@
 ```
   GET /getReviews/{itemName}
   Content-Type: application/json
+```
+```
+  INPUT: {itemName}=MexicanPizza
  ```
  ```Response```
 ```
-INPUT: {itemName}="Cereals"
-OUTPUT: [
-    {
-        "id": "5c0ac7571ddecdd2d1906677",
-        "ItemName": "Cereals",
-        "Reviews": [
-            {
-                "ReviewerName": "sbw"
-                "Comment": "qqq",
-                "Rating": 3
-            },            
-        ]
-        "ReviewDate": "2019.11.15 20.44.54" 
-    }
+OUTPUT: 
+[
+  {
+    "id": "5dd38c07e1af6e9229916850",
+    "ItemName": "MexicanPizza",
+    "Reviews": [
+      {
+        "ReviewerName": "Ayushman",
+        "Comment": "good",
+        "Rating": 4
+      }
+    ],
+    "ReviewDate": "2019-11-18 22:30:31"
+  },
+  {
+    "id": "5dd38c15e1af6e922991685a",
+    "ItemName": "MexicanPizza",
+    "Reviews": [
+      {
+        "ReviewerName": "Naman",
+        "Comment": "good",
+        "Rating": 4
+      }
+    ],
+    "ReviewDate": "2019-11-18 22:30:45"
+  }
 ]
 ```
 
+---
+
+**3. POST request to post a new review**
+
+```Request```
+```
+   POST /postReview
+   Content-Type: application/json
+```
+
+```
+INPUT:
+{
+	"ItemName" : "MexicanPizza",
+	"Reviews" : [
+					{
+						"ReviewerName" : "Naman",
+						"Comment" : "good",
+						"Rating" : 4
+					}
+				]
+}
+```
+```Response```
+```
+
+OUTPUT:
+{
+  "Response": "Review added"
+}
+```
+---
+**4. Update previous review**
+
+```Request```
+```
+   PUT /updateReview
+   Content-Type: application/json
+```
+```
+INPUT:
+{
+	"ItemName" : "MexicanPizza",
+	"Reviews" : [
+					{
+						"ReviewerName" : "Naman",
+						"Comment" : "Best Pizza Ever",
+						"Rating" : 5
+					}
+				]
+}
+```
+```Response```
+```
+OUTPUT:
+{
+  "Response": "Review updated"
+}
+```
+---
+
+**5. Delete Last review**
+
+```Request```
+```
+   DELETE /deleteReview
+   Content-Type: application/json
+```
+
+```Response```
+```
+OUTPUT:
+{
+  "Response": "Review deleted"
+}
+```
 ---
