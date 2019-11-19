@@ -37,7 +37,6 @@ Parameters for Success
 | ItemDescription    | String | Detail Description of Item         |
 | ItemAmount         | Float  | Amount of the Item                 |
 | ItemAvailable      | Boolean| Displays if Item is available      |
-| ItemImagePath      | String | Represents the URL of Item's image |
 | statusCode         | int    | Code representing success response |
 
 Parameters for Error
