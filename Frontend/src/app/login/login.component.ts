@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
@@ -11,16 +11,22 @@ export class LoginComponent implements OnInit {
 
   username:any;
   password:any;
+  userId:any
 
   requestObject ={
     "username" : this.username,
     "password": this.password
-
   }
   constructor(private http : HttpClient, private router: Router) {
     
   }
+
+
+
+
+  
   ngOnInit() {
+    
 
   }
   login() {
@@ -33,16 +39,14 @@ export class LoginComponent implements OnInit {
         {"username":this.username,"password":this.password},
             {headers: header})
         .subscribe((res) => {
+          sessionStorage.setItem('userId',res['id']);
+          this.username=sessionStorage.setItem('username',this.username)
             //do something with the response here
-
             this.router.navigate(['./home']);
 
 
             console.log(res);
-        });
-
-
-        
+        }); 
     
     
   }

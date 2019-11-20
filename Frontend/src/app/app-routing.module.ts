@@ -13,7 +13,7 @@ import { PaymentComponent } from './payment/payment.component';
 
 const appRoutes: Routes = [
   { path: '', component: LoginComponent, pathMatch: 'full'},
-  { path: 'register', component: RegistrationComponent },
+  { path: 'signup', component: RegistrationComponent },
   { path: 'login', component: LoginComponent},
   { path: 'home', component: LandingComponent},
   { path: 'order', component:OrderComponent},

@@ -2,5 +2,21 @@
 <br>
 <br>
 <label>Enter your item number here:</label>
-<input type="text" placeholder="ItemId" [(ngnodel)]="ItemId">
+<input type="text" [(ngModel)]="itemId">
+<br>
+<label>Enter your item name here:</label>
+<input type="text" [(ngModel)]="itemName">
+<br>
+<label>Enter price here:</label>
+<input type="text" [(ngModel)]="itemPrice">
+<br>
+<label>Enter quantity here:</label>
+<input type="text" [(ngModel)]="itemQuantity">
 <button (click)="placeOrder()">Place order</button>
+<br>
+<input type="text" [(ngModel)]="getOrderId">
+<button (click)="getOrder()">get order</button>
+<br>
+<input type="text" [(ngModel)]="deleteOrderId">
+<button (click)="deleteOrder()">delete order</button>
+

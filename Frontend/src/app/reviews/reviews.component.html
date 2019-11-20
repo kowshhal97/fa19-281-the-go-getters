@@ -1,1 +1,18 @@
-<p>reviews works!</p>
+<p style="text-align: center;">Reviews!</p>
+<label>Enter the item name here:</label><input type="text" [(ngModel)]="itemName">
+<br>
+<button (click)="getReview()">get Review</button>
+<p>Review for the item requested is</p>
+<div *ngFor = "let review of reviews">
+    <p> {{review.ItemName}} --  {{review.Reviews[0].ReviewerName}} -- {{review.Reviews[0].Comment}} -- {{review.Reviews[0].Rating}} -- {{review.ReviewDate}}</p>
+   </div>
+   <br>
+<p>enter your review to post!</p>
+<br>
+<label>Item Name:</label><input type="text" [(ngModel)]="ItemNameEntered">
+<br>
+<label>your comments:</label><input type="text" [(ngModel)]="CommentsEntered">
+<br>
+<label>your rating:</label><input type="text" [(ngModel)]="RatingEntered">
+<br>
+<button (click)="postReview()">Post Review</button>

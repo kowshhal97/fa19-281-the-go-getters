@@ -1,11 +1,7 @@
 package main
 
-import (
-"gopkg.in/mgo.v2/bson"
-)
-
 type Users struct {
-	Id  bson.ObjectId `json:"id" bson:"_id,omitempty"`
+	Id  int `json:"id" bson:"_id,omitempty"`
 	UserName  string `json:"username" bson:"username"`
 	Password  string `json:"password" bson:"password"`
 	FirstName string `json:"firstname" bson:"firstname"`
@@ -14,7 +10,6 @@ type Users struct {
 
 type Users1 struct {
 	UserName  string `json:"username" bson:"username"`
-
 }
 
 type Error  struct {

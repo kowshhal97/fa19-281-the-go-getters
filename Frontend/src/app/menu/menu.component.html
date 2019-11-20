@@ -1,2 +1,6 @@
 <h1 style="text-align: center;">Todays Pizza menu</h1>
-<div></div>
+<div *ngFor = "let menu of menuItems">
+   <p> {{menu._id}} -- {{menu.itemname}} -- {{menu.itemname}} -- {{menu.itemsummary}} -- {{menu.itemdescription}} -- {{menu.itemamount}} </p>
+  </div>
+  <button (click)="getMenu()">Refresh!</button>
+  <button a routerLink="/order">continue to place order</button>
