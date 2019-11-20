@@ -40,7 +40,7 @@ export class LoginComponent implements OnInit {
             {headers: header})
         .subscribe((res) => {
           sessionStorage.setItem('userId',res['id']);
-          this.userId=sessionStorage.getItem('userId')
+          this.username=sessionStorage.setItem('username',this.username)
             //do something with the response here
             this.router.navigate(['./home']);
 
