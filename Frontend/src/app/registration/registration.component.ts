@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 
@@ -13,10 +13,10 @@ export class RegistrationComponent implements OnInit {
   password:any='';
   firstname:any='';
   lastname:any='';
+  userId:any
 
 
   constructor(private http : HttpClient, private router: Router) { }
-
   ngOnInit() {
   }
 
@@ -31,7 +31,8 @@ export class RegistrationComponent implements OnInit {
             {headers: header})
         .subscribe((res) => {
             //do something with the response here
-
+            sessionStorage.setItem('userId',res['id']);
+            this.userId=sessionStorage.getItem('userId')
             this.router.navigate(['./home']);
 
 

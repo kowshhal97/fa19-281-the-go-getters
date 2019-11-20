@@ -87,7 +87,12 @@ var error Error;
 		LastName := user.LastName
 		fmt.Println(UserName)
 		fmt.Println(Password)
-
+		user.Id,err =session.DB(mongodb_database).C(mongodb_collection).Count()
+		if(err!=nil){
+			log.Fatal(err)
+		}
+		user.Id++
+		Id:=user.Id
 		if (user.UserName == "") {
 			error.Message = "username is missing"
 			respondwitherror(w, http.StatusBadRequest, error)
@@ -107,6 +112,7 @@ var error Error;
 				log.Fatal(err)
 			}
 		}
+
 		hash, err := bcrypt.GenerateFromPassword([]byte((user.Password)), 10)
 		if (err != nil) {
 			log.Fatal(err)
@@ -114,7 +120,7 @@ var error Error;
 		Password=string(hash);
 		if (result.UserName == ""){
 
-			err4 := c.Insert(&Users{UserName: UserName, Password: Password, FirstName: FirstName, LastName: LastName})
+			err4 := c.Insert(&Users{Id:Id,UserName: UserName, Password: Password, FirstName: FirstName, LastName: LastName})
 
 			if err4 != nil {
 				panic(err4)
@@ -156,12 +162,12 @@ func loginHandler(formatter *render.Render) http.HandlerFunc{
 		fmt.Println(UserName)
 		fmt.Println(Password)
 
-
 		result := Users{}
 		err2 := c.Find(bson.M{"username": UserName}).One(&result)
 		fmt.Println(err2)
 		fmt.Println("result")
 		fmt.Println(result)
+		user.Id=result.Id
 		hashedPassword:=result.Password
 		err=bcrypt.CompareHashAndPassword([]byte(hashedPassword),[]byte(Password))
 		if(err!=nil){
@@ -169,7 +175,7 @@ func loginHandler(formatter *render.Render) http.HandlerFunc{
 			respondwitherror(w,http.StatusUnauthorized,error)
 			return
 		} else{
-			err:=formatter.JSON(w, http.StatusOK, user)
+			err:=formatter.JSON(w, http.StatusOK, result)
 			if(err!=nil){
 				log.Fatal(err)
 			}
