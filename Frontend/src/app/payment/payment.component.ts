@@ -22,6 +22,16 @@ endpoint="http://54.90.233.215:80/payments"
   constructor(private http : HttpClient, private router: Router) { }
 
   ngOnInit() {
+    if(sessionStorage.getItem('userId')==null)
+    {
+      this.router.navigate(['./login'])
+      window.alert("you need to login first!")
+    }
+    if(sessionStorage.getItem('orderId')==null)
+    {
+      this.router.navigate(['./order'])
+      window.alert("you need to order first!")
+    }
     this.orderID=sessionStorage.getItem('orderId')
     console.log(this.orderID)
   }
@@ -68,13 +78,27 @@ placeOrderFinal(){
   header.append('Content-Type', 'application/json');
   
    this.http
-      .put("http://34.217.1.118:3000/order"+'/'+sessionStorage.getItem('orderId'),{headers: header}).subscribe((res) => {
+      .put("http://52.27.19.100:3000/order"+'/'+sessionStorage.getItem('orderId'),{headers: header}).subscribe((res) => {
           //do something with the response here
-          this.router.navigate(['./payment']);
+          this.router.navigate(['./order']);
           
           console.log(res);
 
 });
 }
+gotoMenu(){
+  this.router.navigate(['./menu'])
+}
 
+gotoReviews(){
+  this.router.navigate(['./reviews'])
+}
+
+gotoHome(){
+  this.router.navigate(['./home'])
+}
+logout(){
+  sessionStorage.setItem('userId',null)
+  this.router.navigate(['./login'])
+}
 }

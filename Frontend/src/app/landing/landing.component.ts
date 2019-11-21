@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-landing',
@@ -7,9 +9,34 @@ import { Component, OnInit } from '@angular/core';
 })
 export class LandingComponent implements OnInit {
 
-  constructor() { }
+  constructor(private http : HttpClient, private router: Router) {
+    
+  }
 
   ngOnInit() {
+    if(sessionStorage.getItem('userId')==null)
+    {
+      console.log("***")
+      this.router.navigate(['./login'])
+      window.alert("you need to login first!")
+    }
+
+  }
+
+  gotoMenu(){
+    this.router.navigate(['./menu'])
+  }
+
+  gotoReviews(){
+    this.router.navigate(['./reviews'])
+  }
+
+  gotoHome(){
+    this.router.navigate(['./home'])
+  }
+  logout(){
+    sessionStorage.setItem('userId',null)
+    this.router.navigate(['./login'])
   }
 
 }

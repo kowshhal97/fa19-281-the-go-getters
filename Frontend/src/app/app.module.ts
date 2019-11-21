@@ -7,7 +7,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 
-import { HomeComponent } from './home/home.component';
 import { RegistrationComponent } from './registration/registration.component';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { LandingComponent } from './landing/landing.component';
@@ -24,7 +23,6 @@ import { PaymentComponent } from './payment/payment.component';
     AppComponent,
     LoginComponent,
 
-    HomeComponent,
     RegistrationComponent,
     LandingComponent,
     OrderComponent,

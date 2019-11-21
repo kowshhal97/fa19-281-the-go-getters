@@ -1,3 +1,35 @@
+<nav class="navbar navbar-dark bg-dark navbar-expand-lg">
+        <div class="container-fluid px-0">
+          <div class="row w-100">
+            <div class="col-2">
+              <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation" (click)="isShown = !isShown" >
+                <span class="navbar-toggler-icon"></span>
+              </button>
+            </div>
+      
+            <div class="col-10">
+              <div class="collapse justify-content-end navbar-collapse" [ngClass]="{ 'show': isShown }" id="navbarTogglerDemo03">
+                <ul class="navbar-nav mt-2 mt-lg-0">
+                  <li class="nav-item active">
+                    <a class="nav-link" href="home" (click)="gotoHome()" >Home</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="menu" (click)="gotoMenu()" >Menu</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="reviews" (click)="gotoReviews()" >Reviews</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" (click)="logout()" >Logout</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+
 <div class="container">
     <div class="row">
         <div class="col-md-4">
@@ -8,7 +40,6 @@
                     <h5 class="card-title">Pepporoni Pizza</h5>
                     <p class="card-text">Some quick example text to build on the card title and make up the bulk of the
                         card's content.</p>
-                    <a href="#" class="btn btn-primary">Go somewhere</a>
                 </div>
             </div>
         </div>
@@ -20,7 +51,6 @@
                         <h5 class="card-title">Italian Delight</h5>
                         <p class="card-text">Some quick example text to build on the card title and make up the bulk of the
                             card's content.</p>
-                        <a href="#" class="btn btn-primary">Go somewhere</a>
                     </div>
                 </div>
             </div>
@@ -32,7 +62,6 @@
                             <h5 class="card-title">Card title</h5>
                             <p class="card-text">Some quick example text to build on the card title and make up the bulk of the
                                 card's content.</p>
-                            <a href="#" class="btn btn-primary">Go somewhere</a>
                         </div>
                     </div>
                 </div>

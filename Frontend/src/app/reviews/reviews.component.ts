@@ -13,6 +13,13 @@ export class ReviewsComponent implements OnInit {
 
   reviews:any=[]
   ngOnInit() {
+    console.log("*****")
+    if(sessionStorage.getItem('userId')==null)
+    {
+      this.router.navigate(['./login'])
+      window.alert("you need to login first!")
+    }
+    this.router.navigate(['./reviews'])
     this.username=sessionStorage.getItem('username')
   }
  endpoint:any="http://13.57.219.176:80"
@@ -24,11 +31,12 @@ export class ReviewsComponent implements OnInit {
  RequestObject={}
  ReviewPost=[]
  username:any
+ bool1:any=false
   getReview(){
 
     let header = new HttpHeaders();
     header.append('Content-Type', 'application/json');
-    
+    this.bool1=true
      this.http
         .get(this.endpoint+'/getReviews'+'/'+this.itemName,{headers: header})
         .subscribe((res) => {
@@ -60,5 +68,20 @@ this.ReviewPost[0]={'ReviewerName':this.username,"Comment":this.CommentsEntered,
 console.log(this.ReviewPost)
 this.RequestObject={"ItemName":this.ItemNameEntered,"Reviews":this.ReviewPost}
 console.log(this.RequestObject)
+}
+gotoMenu(){
+  this.router.navigate(['./menu'])
+}
+
+gotoReviews(){
+  this.router.navigate(['./reviews'])
+}
+
+gotoHome(){
+  this.router.navigate(['./home'])
+}
+logout(){
+  sessionStorage.setItem('userId',null)
+  this.router.navigate(['./login'])
 }
 }
