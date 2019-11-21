@@ -4,7 +4,6 @@
     <list default="true" id="3324f025-20bc-4411-8ca7-2483fb9fbf70" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Menu/src/menu/server.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/Menu/src/menu/server.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Menu/src/menu/types.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/Menu/src/menu/types.go" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
