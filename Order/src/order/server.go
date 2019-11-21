@@ -47,6 +47,7 @@ func initRoutes(mx *mux.Router, formatter *render.Render) {
 	mx.HandleFunc("/order", orderPizzaHandler(formatter)).Methods("POST")
 	mx.HandleFunc("/order/{orderId}", orderConfirmationHandler(formatter)).Methods("PUT")
 	mx.HandleFunc("/order/{orderId}", deletePizzaHandler(formatter)).Methods("DELETE")
+	mx.HandleFunc("/order/user/{userId}", getUseridPizzaHandler(formatter)).Methods("GET")
 }
 
 
@@ -191,5 +192,34 @@ func deletePizzaHandler(formatter *render.Render) http.HandlerFunc {
 
 	}
 }
+
+func getUseridPizzaHandler(formatter *render.Render) http.HandlerFunc {
+	return func(w http.ResponseWriter, req *http.Request) {
+
+		session, error := mgo.Dial(server_mongo)
+		defer session.Close()
+		session.SetMode(mgo.Monotonic, true)
+		if error != nil {
+			formatter.JSON(w, http.StatusInternalServerError, "Error")
+			return
+		}
+		c := session.DB(database).C(collection)
+		parameter := mux.Vars(req)
+		var id string = parameter["userId"]
+		fmt.Println("id is" ,id)
+		var order []PizzaOrder
+		
+		error_1 := c.Find(bson.M{"userId": id,"orderStatus": "Successfull"}).All(&order)
+		fmt.Println("error is" ,error)
+		if error_1 != nil {
+			fmt.Println("error is" , error_1)
+			formatter.JSON(w, http.StatusNotFound, "Error in GET request")
+			return
+		}
+	        _ = json.NewDecoder(req.Body).Decode(&order)
+		formatter.JSON(w, http.StatusOK, order)
+	}
+}
+
 
 
