@@ -56,17 +56,11 @@ func MenuServer() *negroni.Negroni {
 // Menu Service API Routes
 func initRoutes(router *mux.Router, formatter *render.Render) {
 	router.HandleFunc("/menu/ping", pingHandler(formatter)).Methods("GET")
+	router.HandleFunc("/menu/item", createItemHandler(formatter)).Methods("POST")
 	router.HandleFunc("/menu", GetMenu(formatter)).Methods("GET")
 	router.HandleFunc("/menu/{ItemId}", getItemByIdHandler(formatter)).Methods("GET")
 }
 
-/* Error Helper Functions
-func failOnError(err error, msg string) {
-	if err != nil {
-		log.Fatalf("%s: %s", msg, err)
-		panic(fmt.Sprintf("%s: %s", msg, err))
-	}
-}*/
 
 // Menu Service Health Check API
 func pingHandler(formatter *render.Render) http.HandlerFunc {
@@ -153,4 +147,37 @@ func getItemByIdHandler(formatter *render.Render) http.HandlerFunc {
 		fmt.Println("Item details: ", item)
 		formatter.JSON(w, http.StatusOK, item)
 	}
+}
+
+func createItemHandler(formatter *render.Render) http.HandlerFunc {
+	return func(response http.ResponseWriter, req *http.Request){
+
+		var create_item MenuItem
+		_ = json.NewDecoder(req.Body).Decode(&create_item)
+		session, error := mgo.Dial(database_server)
+		if error = session.DB(database_server).Login(mongo_user, mongo_pass);
+		error != nil {
+			formatter.JSON(response, http.StatusInternalServerError, "Login Error")
+			return
+		}
+		defer session.Close()
+		session.SetMode(mgo.Monotonic, true)
+		c := session.DB(database).C(collection)
+
+		var new_item Item
+
+		new_item.ItemId = create_item.ItemId
+		new_item.ItemName = create_item.ItemName
+		new_item.Price = create_item.Price
+		new_item.Description = create_item.Description
+        new_item.ItemType = create_item.ItemType
+
+		item_error := c.Insert(new_item)
+			if item_error != nil {
+				formatter.JSON(response, http.StatusInternalServerError, "Sorry, item cannot be inserted, check values.")
+				return
+			}
+			fmt.Println("New item inserted successfully.")
+			formatter.JSON(response, http.StatusOK, new_item)
+    }
 }

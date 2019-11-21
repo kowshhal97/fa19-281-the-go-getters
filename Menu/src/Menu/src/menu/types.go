@@ -8,3 +8,11 @@ type Item struct {
 	Description 	string	`json:"Description" bson:"Description"`
 	ItemType		string  `json:"ItemType" bson:"ItemType"`
 }
+
+type MenuItem struct {
+	ItemId          string 	`json:"ItemId" bson:"ItemId"`
+	ItemName		string  `json:"ItemName" bson:"ItemName"`
+	Price 			int	    `json:"Price" bson:"Price"`
+	Description 	string	`json:"Description" bson:"Description"`
+	ItemType		string  `json:"ItemType" bson:"ItemType"`
+}
