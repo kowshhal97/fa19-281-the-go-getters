@@ -48,6 +48,7 @@ func initRoutes(mx *mux.Router, formatter *render.Render) {
 	mx.HandleFunc("/order/{orderId}", orderConfirmationHandler(formatter)).Methods("PUT")
 	mx.HandleFunc("/order/{orderId}", deletePizzaHandler(formatter)).Methods("DELETE")
 	mx.HandleFunc("/order/user/{userId}", getUseridPizzaHandler(formatter)).Methods("GET")
+	mx.HandleFunc("/orders", getPizzasAtOnceHandler(formatter)).Methods("GET")
 }
 
 
@@ -113,20 +114,13 @@ func orderPizzaHandler(formatter *render.Render) http.HandlerFunc {
 		item_list.ItemQuantity = order_pizza.ItemQuantity
 
 		record_error := c.Find(bson.M{"userId": order_pizza.UserId, "orderStatus": "Processing"}).One(&order)
-
-		if record_error == nil {
-			order.Items = append(order.Items, item_list)
-			order.TotalAmount = (order.TotalAmount + item_list.ItemPrice * item_list.ItemQuantity)
-			c.Update(bson.M{"userId": order_pizza.UserId}, bson.M{"$set": bson.M{"items": order.Items, "totalAmount": order.TotalAmount}})
-		    fmt.Println("Order already exists")
-		} else {
 			u, _ := uuid.NewV4()
 		    order = PizzaOrder{
 		        OrderId: u.String(),
 				UserId:  order_pizza.UserId,
 				Items: []PizzaItem{
 					item_list},
-				OrderStatus: "Active",
+				OrderStatus: "Processing",
 				TotalAmount: order_pizza.ItemPrice}
 			error := c.Insert(order)
 			if error != nil {
@@ -134,7 +128,7 @@ func orderPizzaHandler(formatter *render.Render) http.HandlerFunc {
 				return
 			}
 			fmt.Println("Congratulation! Order Placed.")
-		}
+		
 		formatter.JSON(w, http.StatusOK, order)
 	}
 }
@@ -220,6 +214,24 @@ func getUseridPizzaHandler(formatter *render.Render) http.HandlerFunc {
 		formatter.JSON(w, http.StatusOK, order)
 	}
 }
+
+//API to get all orders at once
+func getPizzasAtOnceHandler(formatter *render.Render) http.HandlerFunc {
+        return func(w http.ResponseWriter, req *http.Request) {
+                session, error := mgo.Dial(server_mongo)
+                defer session.Close()
+                session.SetMode(mgo.Monotonic, true)
+                if error != nil {
+                        formatter.JSON(w, http.StatusInternalServerError, "Error")
+                        return
+                }
+                c := session.DB(database).C(collection)
+                var all_orders []PizzaOrder
+                error = c.Find(bson.M{}).All(&all_orders)
+                formatter.JSON(w, http.StatusOK, all_orders)
+        }
+}
+
 
 
 
