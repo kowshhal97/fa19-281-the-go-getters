@@ -28,7 +28,8 @@ var mongodb_password = os.Getenv("MONGODB_PASSWORD")
 */
 //hardcode for testing
 
-var mongodb_server = "mongodb://127.0.0.1:27017"
+//var mongodb_server = "mongodb://127.0.0.1:27017"
+var mongodb_server = "mongodb://10.0.1.135:27017"
 var mongodb_database = "cmpe281"
 var mongodb_collection = "NewPizza"
 var mongodb_username = "admin"
@@ -202,4 +203,13 @@ func updateReviewHandler(formatter *render.Render) http.HandlerFunc {
 			formatter.JSON(w, http.StatusOK, struct{ Response string }{"Review updated"})
 		}
 	}
+}
+
+func setDefaultHeaders(w http.ResponseWriter) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+	w.Header().Set("Cache-Control", "no-store, no-cache, must-revalidate, post-check=0, pre-check=0")
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.Header().Set("Vary", "Accept-Encoding")
 }
