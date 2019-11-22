@@ -16,7 +16,7 @@ import (
 	//	"os"
 )
 
-var database_server = "35.166.110.191:27017"
+var database_server = "10.0.3.193:27017"
 var database = "admin"
 var collection = "menu"
 var mongo_user = "admin"
