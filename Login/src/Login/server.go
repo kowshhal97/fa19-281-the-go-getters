@@ -15,7 +15,7 @@ import (
 	"net/http"
 )
 
-var mongodb_server = "mongodb://admin:admin@35.166.110.191:27017"
+var mongodb_server = "mongodb://admin:admin@10.0.1.18:27017"
 var mongodb_database = "admin"
 var mongodb_collection = "users"
 
@@ -64,7 +64,7 @@ func JSONDecoder(r*http.Request,user Users) Users {
 }
 func signupHandler(formatter *render.Render) http.HandlerFunc{
 	return func(w http.ResponseWriter, req *http.Request) {
-var error Error;
+		var error Error;
 		setDefaultHeaders(w)
 		session, err := mgo.Dial(mongodb_server)
 		if err != nil {

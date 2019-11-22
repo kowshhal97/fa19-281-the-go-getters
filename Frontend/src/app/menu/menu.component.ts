@@ -51,7 +51,7 @@ export class MenuComponent implements OnInit {
   getMenu(){
     let header=new HttpHeaders()
     header.append('content-type','application-json')
-    this.http.get<any>("http://52.12.73.70:8001/menu",{headers: header}).subscribe((res) => {
+    this.http.get<any>("http://34.222.133.161:8001/menu",{headers: header}).subscribe((res) => {
             //do something with the response here
             this.router.navigate(['./menu']);
             this.menuItems=res

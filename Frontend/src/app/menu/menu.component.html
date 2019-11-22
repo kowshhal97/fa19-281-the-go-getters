@@ -29,9 +29,18 @@
           </div>
         </div>
       </nav>
-<h1 style="text-align: center;">Todays Pizza menu</h1>
-<div *ngFor = "let menu of menuItems">
-   <p> {{menu.ItemId}} -- {{menu.ItemName}} -- {{menu.Price}} -- {{menu.Description}} -- {{menu.ItemType}} </p>
-  </div>
-  <button (click)="getMenu()">Refresh!</button>
-  <button a routerLink="/order">continue to place order</button>
+<h1 style="text-align: center;">Todays Pizza menu</h1><br><br>
+<div *ngFor = "let menu of menuItems" class="col-md-6 mb-4" style="border: 1px solid;padding: 2em;margin-left: 3em;">
+  <br>
+      <p class="d-inline mr-2">Item ID:</p> <p class="d-inline" style=" font-weight: bold; ">{{menu.ItemId}}</p> <br>
+      <p class="d-inline mr-2">Item Name: </p><p class="d-inline" style=" font-weight: bold; ">{{menu.ItemName}} </p> <br>
+      <p class="d-inline mr-2">Item Price:</p> <p class="d-inline" style=" font-weight: bold; ">{{menu.Price}}</p> <br>
+      <p class="d-inline mr-2">Item Description:</p> <p class="d-inline" style=" font-weight: bold; ">{{menu.Description}}</p> <br>
+      <p class="d-inline mr-2">Item type:</p> <p class="d-inline" style=" font-weight: bold; ">{{menu.ItemType}}</p> <br>
+</div><p>
+<button style=" margin-left: 20em; margin-right: 20em; background: green; color: #fff; margin-top: 1em; "
+                    (click)="getMenu()">Refresh!</button>
+  <button style=" margin-left: 20em; margin-right: 20em; background: green; color: #fff; margin-top: 1em; "
+  a routerLink="/order">continue to place order</button>
+</p>
+  

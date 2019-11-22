@@ -24,6 +24,12 @@ getorder:any
   constructor(private http : HttpClient, private router: Router) {
     
   }
+  totalAmount:any
+  orderstatus:any
+  orderresponseObject:any
+  itemPriceee: any; 
+
+  orderDetails=[]
   ngOnInit() {
     if(sessionStorage.getItem('userId')==null)
     {
@@ -32,23 +38,31 @@ getorder:any
     }
 
   }
+  setOrderObject(){
+    this.orderresponseObject={
+      'orderId':this.orderId,
+      'itemName':this.itemName,
+      'totalAmount':this.totalAmount,
+      'orderStatus':this.orderstatus
+    }
+  }
   getMenuItem(){
     let header = new HttpHeaders();
     header.append('Content-Type', 'application/json');
-     this.http.get("http://52.12.73.70:8001/menu"+'/'+this.itemId,
+     this.http.get("http://34.222.133.161:8001/menu"+'/'+this.itemId,
             {headers: header})
         .subscribe((res) => {
           this.itemPrice=res['Price']
-          console.log(this.itemPrice)
-          this.itemName=res['itemName']
+          this.itemName=res['ItemName']
             //do something with the response here
+            console.log(res)
             this.router.navigate(['./order']);
-            console.log(res);
         });
   }
   placeOrder() {
     this.getMenuItem()
-    console.log(this.itemPrice)
+    setTimeout(() => {
+         console.log(this.itemPrice)
     let header = new HttpHeaders();
     header.append('Content-Type', 'application/json');
      this.http.post(this.endpoint,{"userId" : this.userid,
@@ -59,11 +73,18 @@ getorder:any
           this.userid =sessionStorage.getItem("userId");
             //do something with the response here
             this.orderId=res['orderId']
+            this.totalAmount=res['totalAmount']
+            this.orderstatus=res['orderStatus']
+            this.setOrderObject()
+            this.orderDetails=[this.orderresponseObject]
             sessionStorage.setItem('orderId',this.orderId)
             this.router.navigate(['./order']);
-            window.alert("Order Placed, Id="+this.orderId)
-            console.log(res);
+            //window.alert("Order Placed, Id="+this.orderId)
+             console.log(res);
         }); 
+    }, 100);
+
+  
   }
   goToPayments(){
     this.router.navigate(['./payment'])
@@ -89,6 +110,11 @@ getorder:any
             {headers: header})
         .subscribe((res) => {
           this.getorder=res
+          this.orderId=res['orderId']
+            this.totalAmount=res['totalAmount']
+            this.orderstatus=res['orderStatus']
+            this.setOrderObject()
+            this.orderDetails=[this.orderresponseObject]
             //do something with the response here
             this.router.navigate(['./order']);
             console.log(res);
