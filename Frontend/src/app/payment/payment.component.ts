@@ -17,6 +17,7 @@ expMonth:any
 expyear:any
 expDate=this.expMonth+'/'+this.expyear;
 orderID:any
+Total:any
 
 endpoint="https://i18253eej8.execute-api.us-east-1.amazonaws.com/prod/payments"
   constructor(private http : HttpClient, private router: Router) { }
@@ -34,6 +35,7 @@ endpoint="https://i18253eej8.execute-api.us-east-1.amazonaws.com/prod/payments"
     }
     this.orderID=sessionStorage.getItem('orderId')
     console.log(this.orderID)
+    this.Total=sessionStorage.getItem('totalAmount')
   }
   pay(){
 
@@ -53,6 +55,7 @@ endpoint="https://i18253eej8.execute-api.us-east-1.amazonaws.com/prod/payments"
 
             this.placeOrderFinal()
             this.router.navigate(['./payment']);
+            window.alert("Your Payment is succesfull!\nThankyou")
             console.log(res);
 
 });
@@ -76,7 +79,6 @@ placeOrderFinal(){
 
   let header = new HttpHeaders();
   header.append('Content-Type', 'application/json');
-  
    this.http
       .put("https://i18253eej8.execute-api.us-east-1.amazonaws.com/prod/order"+'/'+sessionStorage.getItem('orderId'),{headers: header}).subscribe((res) => {
           //do something with the response here

@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
+import { bindCallback } from 'rxjs';
 
 @Component({
   selector: 'app-order',
@@ -49,7 +50,7 @@ getorder:any
   getMenuItem(){
     let header = new HttpHeaders();
     header.append('Content-Type', 'application/json');
-     this.http.get("https://i18253eej8.execute-api.us-east-1.amazonaws.com/prod/menu"+'/'+this.itemId,
+    const p = this.http.get("https://i18253eej8.execute-api.us-east-1.amazonaws.com/prod/menu"+'/'+this.itemId,
             {headers: header})
         .subscribe((res) => {
           this.itemPrice=res['Price']
@@ -58,32 +59,43 @@ getorder:any
             console.log(res)
             this.router.navigate(['./order']);
         });
+
+    
   }
+  
   placeOrder() {
-    this.getMenuItem()
-    setTimeout(() => {
-         console.log(this.itemPrice)
+    
     let header = new HttpHeaders();
     header.append('Content-Type', 'application/json');
-     this.http.post('https://0ghg7tvccf.execute-api.us-west-2.amazonaws.com/prod/order',JSON.stringify({"userId" : this.userid,
-        "itemName" : this.itemName,
-        "itemQuantity" : parseInt(this.itemQuantity),
-        "itemPrice": parseFloat(this.itemPrice),
-        "itemId" : this.itemId}),{headers: header}).subscribe((res) => {
-          this.userid =sessionStorage.getItem("userId");
+    const p = this.http.get("https://i18253eej8.execute-api.us-east-1.amazonaws.com/prod/menu"+'/'+this.itemId,
+            {headers: header})
+        .subscribe((res) => {
+          this.itemPrice=res['Price']
+          this.itemName=res['ItemName']
             //do something with the response here
-            this.orderId=res['orderId']
-            this.totalAmount=res['totalAmount']
-            this.orderstatus=res['orderStatus']
-            this.setOrderObject()
-            this.orderDetails=[this.orderresponseObject]
-            sessionStorage.setItem('orderId',this.orderId)
+            console.log(res)
             this.router.navigate(['./order']);
-            //window.alert("Order Placed, Id="+this.orderId)
-             console.log(res);
-        }); 
-    }, 500);
-
+            header.append('Content-Type', 'application/json');
+            this.http.post('https://0ghg7tvccf.execute-api.us-west-2.amazonaws.com/prod/order',JSON.stringify({"userId" : this.userid,
+               "itemName" : this.itemName,
+               "itemQuantity" : parseInt(this.itemQuantity),
+               "itemPrice": parseFloat(this.itemPrice),
+               "itemId" : this.itemId}),{headers: header}).subscribe((res) => {
+                 this.userid =sessionStorage.getItem("userId");
+                   //do something with the response here
+                   this.orderId=res['orderId']
+                   this.totalAmount=res['totalAmount']
+                   this.orderstatus=res['orderStatus']
+                   sessionStorage.setItem('totalAmount',this.totalAmount)
+                   this.setOrderObject()
+                   this.orderDetails=[this.orderresponseObject]
+                   sessionStorage.setItem('orderId',this.orderId)
+                   this.router.navigate(['./order']);
+                   //window.alert("Order Placed, Id="+this.orderId)
+                    console.log(res);
+               });            
+        });
+    //let header = new HttpHeaders();
   
   }
   goToPayments(){

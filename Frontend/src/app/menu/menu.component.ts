@@ -10,25 +10,7 @@ import { Router } from '@angular/router';
 export class MenuComponent implements OnInit {
 
  
-   menuItems =[
-    {"id": "1",
-    "itemname": "Pepperoni Pizza",
-    "itemtype": "Non-vegetarian",
-    "itemsummary": "Non-veg pizza with pork",
-    "itemdescription": "Pepperoni pizza with thin crust base",
-    "itemamount": 10,},
-    {"id": "2",
-    "itemname": "Pepperoni Pizza",
-    "itemtype": "Non-vegetarian",
-    "itemsummary": "Non-veg pizza with pork",
-    "itemdescription": "Pepperoni pizza with thin crust base",
-    "itemamount": 10,},
-    {"id": "5dd23a250b4efc676c0bc01b",
-    "itemname": "Pepperoni Pizza",
-    "itemtype": "Non-vegetarian",
-    "itemsummary": "Non-veg pizza with pork",
-    "itemdescription": "Pepperoni pizza with thin crust base",
-    "itemamount": 10,}];
+   menuItems =[];
  
   constructor(private http : HttpClient, private router: Router) {
     
