@@ -46,4 +46,22 @@ export class LoginComponent implements OnInit {
     
     
   }
+
+
+
+  gotoMenu(){
+    this.router.navigate(['./menu'])
+  }
+
+  gotoReviews(){
+    this.router.navigate(['./reviews'])
+  }
+
+  gotoHome(){
+    this.router.navigate(['./home'])
+  }
+  logout(){
+    sessionStorage.setItem('userId',null)
+    this.router.navigate(['./login'])
+  }
 }

@@ -3,7 +3,7 @@
 <h2>By the Go Getters <3</h2>
 An online pizza ordering application **cloud scaled SaaS service** on Amazon Cloud and Heroku.
 
-Technologies used: AngularJS, Go, MongoDB database, AWS, Heroku.
+Technologies used: Angular8, Go, MongoDB database, AWS.
 
 ## Architecture
 
@@ -39,15 +39,15 @@ The repository has the following structure:
 
 Go to the frontend directory
 
-    cd frontend
+    cd Frontend
 
-Install all the required packages
+Build the docker image
 
-    npm install
+    docker build -t <image name> .
 
-Run the React Server
+Run the docker image
 
-    npm start
+    docker run -p 80:4200 --name frontend --restart always -d <image name>
 
 # AKF Scale Cube Aspects Covered:
 

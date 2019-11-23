@@ -36,7 +36,9 @@ getorder:any
     {
       this.router.navigate(['./login'])
       window.alert("you need to login first!")
+      return
     }
+    console.log(sessionStorage.getItem('userId'))
 
   }
   setOrderObject(){

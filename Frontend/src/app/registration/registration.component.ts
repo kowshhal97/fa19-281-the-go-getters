@@ -30,7 +30,14 @@ export class RegistrationComponent implements OnInit {
         JSON.stringify({"username":this.username,"password":this.password,"firstname":this.firstname,"lastname":this.lastname}),
             {headers: header})
         .subscribe((res) => {
+
             //do something with the response here
+            if(res['id']==null)
+            {
+              window.alert("User already exists")
+              this.router.navigate(['./signup'])
+              return
+        }
             sessionStorage.setItem('userId',res['id']);
             this.userId=sessionStorage.getItem('userId')
             this.router.navigate(['./home']);

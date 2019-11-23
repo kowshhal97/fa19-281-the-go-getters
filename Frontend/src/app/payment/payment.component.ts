@@ -27,11 +27,13 @@ endpoint="https://i18253eej8.execute-api.us-east-1.amazonaws.com/prod/payments"
     {
       this.router.navigate(['./login'])
       window.alert("you need to login first!")
+      return
     }
     if(sessionStorage.getItem('orderId')==null)
     {
       this.router.navigate(['./order'])
       window.alert("you need to order first!")
+      return
     }
     this.orderID=sessionStorage.getItem('orderId')
     console.log(this.orderID)
