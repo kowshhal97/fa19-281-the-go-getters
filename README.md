@@ -7,11 +7,11 @@ Technologies used: AngularJS, Go, MongoDB database, AWS, Heroku.
 
 ## Architecture
 
-![architecture](System_Architecture.png)
+![architecture](SystemArchitecture.png)
 
 # Team Members
 
-- [Kowshhal Vuppu ](https://github.com/kowshhal97)
+- [Kowshhal Uppu ](https://github.com/kowshhal97)
 - [Shivangi Jain](https://github.com/shivangi-jain)
 - [Naman Agrawal](https://github.com/agrawalnaman)
 - [Pavani Somarouthu](https://github.com/pavanisoma)
