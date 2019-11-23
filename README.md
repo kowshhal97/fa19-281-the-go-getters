@@ -7,7 +7,7 @@ Technologies used: AngularJS, Go, MongoDB database, AWS, Heroku.
 
 ## Architecture
 
-![architecture]
+![architecture](System_Architecture.png)
 
 # Team Members
 
