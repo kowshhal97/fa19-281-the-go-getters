@@ -38,11 +38,11 @@ export class MenuComponent implements OnInit {
 
 
   ngOnInit() {
-    if(sessionStorage.getItem('userId')==null)
+    /*if(sessionStorage.getItem('userId')==null)
     {
       this.router.navigate(['./login'])
       window.alert("you need to login first!")
-    }
+    }*/
     sessionStorage.setItem('menu',JSON.stringify(this.menuItems))
     this.getMenu()
     //sessionStorage.setItem('menu',JSON.stringify(this.menuItems))
@@ -51,7 +51,7 @@ export class MenuComponent implements OnInit {
   getMenu(){
     let header=new HttpHeaders()
     header.append('content-type','application-json')
-    this.http.get<any>("http://34.222.133.161:8001/menu",{headers: header}).subscribe((res) => {
+    this.http.get<any>("https://i18253eej8.execute-api.us-east-1.amazonaws.com/prod/menu",{headers: header}).subscribe((res) => {
             //do something with the response here
             this.router.navigate(['./menu']);
             this.menuItems=res

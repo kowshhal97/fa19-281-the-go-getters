@@ -22,7 +22,7 @@ export class ReviewsComponent implements OnInit {
     this.router.navigate(['./reviews'])
     this.username=sessionStorage.getItem('username')
   }
- endpoint:any="http://13.57.219.176:80"
+ endpoint:any="https://i18253eej8.execute-api.us-east-1.amazonaws.com/prod"
  itemName:any
  reviewForAnItem:any={}
  ItemNameEntered:any
@@ -55,7 +55,7 @@ postReview(){
   header.append('Content-Type', 'application/json');
   
    this.http
-      .post(this.endpoint+'/postReview',this.RequestObject,{headers: header})
+      .post(this.endpoint+'/postReview',JSON.stringify(this.RequestObject),{headers: header})
       .subscribe((res) => {
           //do something with the response here
           this.router.navigate(['./reviews']);

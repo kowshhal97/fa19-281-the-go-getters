@@ -26,8 +26,8 @@ export class RegistrationComponent implements OnInit {
     header.append('Content-Type', 'application/json');
     
      this.http
-        .post("http://34.214.86.104/signup",
-        {"username":this.username,"password":this.password,"firstname":this.firstname,"lastname":this.lastname},
+        .post("https://i18253eej8.execute-api.us-east-1.amazonaws.com/prod/signup",
+        JSON.stringify({"username":this.username,"password":this.password,"firstname":this.firstname,"lastname":this.lastname}),
             {headers: header})
         .subscribe((res) => {
             //do something with the response here

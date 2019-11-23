@@ -16,7 +16,6 @@ export class LandingComponent implements OnInit {
   ngOnInit() {
     if(sessionStorage.getItem('userId')==null)
     {
-      console.log("***")
       this.router.navigate(['./login'])
       window.alert("you need to login first!")
     }

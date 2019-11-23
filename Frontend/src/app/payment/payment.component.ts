@@ -18,7 +18,7 @@ expyear:any
 expDate=this.expMonth+'/'+this.expyear;
 orderID:any
 
-endpoint="http://54.90.233.215:80/payments"
+endpoint="http://PaymentsAPI-768b2d35ac59d34e.elb.us-east-1.amazonaws.com/payments"
   constructor(private http : HttpClient, private router: Router) { }
 
   ngOnInit() {
@@ -78,7 +78,7 @@ placeOrderFinal(){
   header.append('Content-Type', 'application/json');
   
    this.http
-      .put("http://52.27.19.100:3000/order"+'/'+sessionStorage.getItem('orderId'),{headers: header}).subscribe((res) => {
+      .put("https://i18253eej8.execute-api.us-east-1.amazonaws.com/prod/order"+'/'+sessionStorage.getItem('orderId'),{headers: header}).subscribe((res) => {
           //do something with the response here
           this.router.navigate(['./order']);
           

@@ -30,10 +30,9 @@ export class LoginComponent implements OnInit {
 
     let header = new HttpHeaders();
     header.append('Content-Type', 'application/json');
-    
      this.http
-        .post("http://34.214.86.104/login",
-        {"username":this.username,"password":this.password},
+        .post("https://i18253eej8.execute-api.us-east-1.amazonaws.com/prod/login",
+        JSON.stringify({"username":this.username,"password":this.password}),
             {headers: header})
         .subscribe((res) => {
           sessionStorage.setItem('userId',res['id']);
