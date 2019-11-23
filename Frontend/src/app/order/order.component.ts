@@ -49,7 +49,7 @@ getorder:any
   getMenuItem(){
     let header = new HttpHeaders();
     header.append('Content-Type', 'application/json');
-     this.http.get(this.endpoint+'/'+this.itemId,
+     this.http.get("https://i18253eej8.execute-api.us-east-1.amazonaws.com/prod/menu"+'/'+this.itemId,
             {headers: header})
         .subscribe((res) => {
           this.itemPrice=res['Price']
@@ -65,7 +65,7 @@ getorder:any
          console.log(this.itemPrice)
     let header = new HttpHeaders();
     header.append('Content-Type', 'application/json');
-     this.http.post('http://nl-1-5006d09a11608fca.elb.us-west-2.amazonaws.com/order',JSON.stringify({"userId" : this.userid,
+     this.http.post('https://0ghg7tvccf.execute-api.us-west-2.amazonaws.com/prod/order',JSON.stringify({"userId" : this.userid,
         "itemName" : this.itemName,
         "itemQuantity" : parseInt(this.itemQuantity),
         "itemPrice": parseFloat(this.itemPrice),

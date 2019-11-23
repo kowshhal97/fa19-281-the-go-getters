@@ -18,7 +18,7 @@ expyear:any
 expDate=this.expMonth+'/'+this.expyear;
 orderID:any
 
-endpoint="http://PaymentsAPI-768b2d35ac59d34e.elb.us-east-1.amazonaws.com/payments"
+endpoint="https://i18253eej8.execute-api.us-east-1.amazonaws.com/prod/payments"
   constructor(private http : HttpClient, private router: Router) { }
 
   ngOnInit() {
